@@ -1,3 +1,5 @@
 .python-version
 .venv
 pyproject.toml
+.idea
+nvim

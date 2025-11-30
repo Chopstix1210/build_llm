@@ -1,5 +1,5 @@
 import re
-
+# This is a test file to learn how tokenization works
 class SimpleTokenizerV1:
     def __init__(self, vocab):
         self.str_to_int = vocab
