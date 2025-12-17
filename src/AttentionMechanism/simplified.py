@@ -32,7 +32,7 @@ print(f"Attention weights: {attn_weights_2_naive}")
 print(f"Sum: {attn_weights_2_naive.sum()}")
 
 #pytorch softmax version
-attn_weights_2 = torch.softmax(attn_scores_2, dim=0)
+attn_weights_2 = torch.softmax(attn_scores_2, dim=-1)
 print(f"Attention weights: {attn_weights_2}")
 print(f"Sum: {attn_weights_2.sum()}")
 
@@ -42,3 +42,27 @@ context_vec_2 = torch.zeros(query.shape)
 for i, x_i in enumerate(inputs):
     context_vec_2 += attn_weights_2[i] * x_i
 print(context_vec_2)
+
+
+# attn_scores for each word compared to each word.
+"""attn_scores = torch.empty(6,6)
+for i, x_i in enumerate(inputs):
+    for j, x_j in enumerate(inputs):
+        attn_scores[i, j] = torch.dot(x_i, x_j)
+
+print(attn_scores)
+"""
+# for better performance we can use matrix multiplication
+attn_scores = inputs @ inputs.T
+print(attn_scores)
+# and normalize
+attn_weights = torch.softmax(attn_scores, dim=-1)
+print(attn_weights)
+# ensure that the rows = 1
+row_2_sum = sum([0.1385, 0.2379, 0.2333, 0.1240, 0.1082, 0.1581])
+print(f"Row 2 sum: {row_2_sum}")
+print(f"All row sums: {attn_weights.sum(dim=-1)}")
+
+# finally we compute all the context vectors via matrix multiplication
+all_context_vecs = attn_weights @ inputs
+print(all_context_vecs)
